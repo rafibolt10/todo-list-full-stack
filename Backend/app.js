@@ -1,4 +1,5 @@
 // let http = require("http");
+require("dotenv").config();
 let express = require("express");
 let app = express();
 
@@ -16,7 +17,7 @@ app.use(express.json());
 
 // creating the database
 
-mongoose.connect("mongodb://localhost:27017/todolist")
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     console.log("DB connected successfully");
 }
@@ -114,8 +115,4 @@ app.delete("/deleteItem/:bca",async(req,res)=>{
 // res.status(201).json(listItem);
 // })
 
-
-let portNo = 3000;
-app.listen(portNo,()=>{
-    console.log(` Server is running on ${portNo} number successfully!`)
-});
+module.exports = app;
