@@ -12,7 +12,7 @@ let [details,setDetails]= useState({
 })
 
 useEffect(()=>{
-  fetch("http://localhost:3000/showItem",{
+  fetch("https://todo-list-full-stack-five.vercel.app/showItem",{
   method: 'GET',
   headers: {'content-type':'application/json'},
 }).then(res => {
@@ -31,7 +31,7 @@ const handleSubmit = (a) => {
   a.preventDefault();
   console.log(details);
 // fetch () keyword is hotel waiter carry information between frontend and backend
-fetch("http://localhost:3000/createItem",{
+fetch("https://todo-list-full-stack-five.vercel.app/createItem",{
   method: 'POST',
   headers: {'content-type':'application/json'},
   body:JSON.stringify(details)
@@ -61,7 +61,7 @@ const handleEdit = (j) => {
 // ---------- Edit panna data API la Send panni MongoDB la Store panna vekkano -----------
 
 const updateItem = () => {
-  fetch(`http://localhost:3000/editItem/${details._id}`,{
+  fetch(`https://todo-list-full-stack-five.vercel.app/editItem/${details._id}`,{
   method: 'PUT',
   headers: {'content-type':'application/json'},
   body:JSON.stringify(details)
@@ -86,7 +86,7 @@ const updateItem = () => {
 //---------------------- Deleting the TASK by id using click -----------------
 
 const handleDelete = (itemId) => {
-   fetch(`http://localhost:3000/deleteItem/${itemId}`,{
+   fetch(`https://todo-list-full-stack-five.vercel.app/deleteItem/${itemId}`,{
   method: 'DELETE',
   headers: {'content-type':'application/json'}
 }).then(task => {
