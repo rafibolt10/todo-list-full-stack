@@ -17,14 +17,23 @@ app.use(express.json());
 
 // creating the database
 
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
-    console.log("DB connected successfully");
+let dbConnection;
+
+async function connectDB() {
+    if (mongoose.connection.readyState === 1) {
+        return;
+    }
+
+    if (!dbConnection) {
+        dbConnection = mongoose.connect(process.env.MONGO_URI)
+            .catch((err) => {
+                dbConnection = null;
+                throw err;
+            });
+    }
+
+    await dbConnection;
 }
-)
-.catch((err)=>{
-    console.log(err);
-})
 
 // Creating schema
 
@@ -44,6 +53,7 @@ const todoModel = mongoose.model("todolist",todoSchema);
 app.post("/createItem",async (req,res)=>{
     let {title,description} = req.body;
     try{
+           await connectDB();
     const newItem = new todoModel({title,description});
     await newItem.save();
     // creating the object like data.. in document format..
@@ -59,6 +69,7 @@ res.status(201).json(newItem);
 
 app.get("/showItem",async (req,res)=>{
     try{
+           await connectDB();
         let showList = await todoModel.find();
 // find() vanthu database la data va find panni showList la store pannum... and operation nadukumbothu await use pannanum
         res.status(201).json(showList);
@@ -76,6 +87,7 @@ app.put("/editItem/:abc",async(req,res)=>{
     let {title,description} = req.body;
 
     try{
+         await connectDB();
         let modifiedtodolist = await todoModel.findByIdAndUpdate(id,{title,description},{new:true});
         // find
         
@@ -93,6 +105,7 @@ app.put("/editItem/:abc",async(req,res)=>{
 app.delete("/deleteItem/:bca",async(req,res)=>{
     let id=req.params.bca;
     try{
+         await connectDB();
         await todoModel.findByIdAndDelete(id);
         res.status(204).end();
     } catch (error) {
